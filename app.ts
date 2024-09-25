@@ -29,25 +29,48 @@ document.getElementById('resumeForm')?.addEventListener('submit', function(event
         const resumeOutput = `
             <h2>Resume</h2>
             ${profilePictureURL ? `<img src="${profilePictureURL}" alt="Profile Picture" class="profilePicture">` : ''}
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>Name:</strong> <span id="edit-name" class="editable"> ${name} </span> </p>
+            <p><strong>Email:</strong> <span id="edit-email" class="editable"> ${email} </span></p>
+            <p><strong>Phone:</strong> <span id="edit-phone" class="editable"> ${phone} </span></p>
+            
             <h3>Education</h3>
-            <p>${education}</p>
+            <p id="edit-education" class="editable">${education}</p>
+            
             <h3>Experience</h3>
-            <p>${experience}</p>
+            <p id="edit-experience" class="editable">${experience}</p>
+            
             <h3>Skills</h3>
-            <p>${skills}</p>
+            <p id="edit-skilss" class="editable">${skills}</p>
         `;
 
         // Display the generated resume
         const resumeOutputElement = document.getElementById('resumeOutput');
         if (resumeOutputElement) {
             resumeOutputElement.innerHTML = resumeOutput;
-        } else {
-            console.error("Error: resumeOutput element not found");
-        }
+        makeEditable();
+        } 
     } else {
         console.error("Error: required elements not found");
     }
 });
+
+function makeEditable() {
+    const editableElements = document.getElementsByClassName('editable');
+    for (let i = 0; i < editableElements.length; i++) {
+        const element = editableElements[i];
+        const span = element.querySelector('span');
+        if (span) {
+            span.addEventListener('click', function(event: Event) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = span.textContent ?? '';
+                span.parentNode?.replaceChild(input, span);
+                input.addEventListener('blur', function(event: Event) {
+                    span.textContent = input.value;
+                });
+            });
+        }
+    }
+    
+}
+
